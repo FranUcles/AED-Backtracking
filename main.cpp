@@ -23,7 +23,7 @@ int Valor(vector<int> &solucion){
 }
 
 bool Criterio(int nivel, vector<int> &solucion){
-
+    return nivel < solucion.size();                             // Compruebo si me queda algún mecánico por comprobar
 }
 
 bool MasHermanos(int nivel, vector<int> &solucion){
