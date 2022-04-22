@@ -29,7 +29,7 @@ bool MasHermanos(int nivel, vector<int> &solucion){
     if (solucion[nivel] == NUM_AVERIAS)                         // Si es el final, seguro que no hay más hermanos
         return false;
     unsigned i = solucion[nivel];
-    while(i < NUM_AVERIAS && seleccionados[i] == true)          // Busco el primero no seleecionado
+    while(i < NUM_AVERIAS && seleccionados[i])                  // Busco el primero no seleecionado
         i++;
     return i < NUM_AVERIAS;
 }
