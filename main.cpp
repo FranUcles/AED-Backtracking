@@ -3,6 +3,7 @@ using namespace std;
 
 const int NO_ELEGIDO = -1;
 const int NUM_AVERIAS = 10;
+vector<bool> seleccionados(NUM_AVERIAS,false);                  // Array donde puedo ver si una avería ya ha sido asignada o no
 
 void Generar(int &nivel, vector<int> &solucion){
 
@@ -13,14 +14,11 @@ bool Solucion(int nivel, vector<int> &solucion){
 }
 
 int Valor(vector<int> &solucion){
-    int ocupados = 0;                                           // Guarda el número de mecánicos con una avería
-    unsigned i = 0;
-    while (i < solucion.size() && solucion[i] != NO_ELEGIDO) {  // Recorro solo hasta el punto donde no se haya asignado
-        if (solucion[i] > 0)                                    // Contabiliza si ese mecánico tiene un trabajo
-            ocupados++;
-        i++;
-    }
-    return ocupados;                                            // Devuelvo los mecánicos ocupados
+    int averias_asignadas = 0;                                  // Guarda el número de averías que tienen un mecánico
+    for (int i = 0; i < NUM_AVERIAS; i++)                       // Recorre todas las averías, buscando la que estén asignadas
+        if (seleccionados[i])
+            averias_asignadas++;
+    return averias_asignadas;                                           
 }
 
 bool Criterio(int nivel, vector<int> &solucion){
@@ -30,16 +28,14 @@ bool Criterio(int nivel, vector<int> &solucion){
 bool MasHermanos(int nivel, vector<int> &solucion){
     if (solucion[nivel] == NUM_AVERIAS)                         // Si es el final, seguro que no hay más hermanos
         return false;
-    int seleccionados = 0;                                      // Guardo el número de seleccionados menores que solucion[nivel]
-    for (int i = 0; i < nivel; i++){
-        if(solucion[i] > solucion[nivel])                       // Si es mayor que solucion[nivel] lo añado
-            seleccionados++;
+    unsigned i = solucion[nivel];
+    while(i < NUM_AVERIAS && seleccionados[i] == true)          // Busco el primero no seleecionado
         i++;
-    }
-    return seleccionados < (NUM_AVERIAS - solucion[nivel]);     // Comparo, si hay menos seleccionados mayores que solucion[nivel] que posibles, sí hay hermanos
+    return i < NUM_AVERIAS;
 }
 
 void Retroceder(int &nivel, vector<int> &solucion){
+    seleccionados[solucion[nivel]] = false;                     // Quito la avería como elegida
     solucion[nivel] = NO_ELEGIDO;                               // Lo pongo como no elegido
     nivel--;                                                    // Subo de nivel
 }
