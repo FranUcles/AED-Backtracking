@@ -19,36 +19,36 @@ void Generar(int &nivel, vector<int> &solucion, vector<vector<bool>> &apto, vect
 }
 
 bool Solucion(int nivel, vector<int> &solucion){
-    return nivel == solucion.size();                            // Compruebo si he asginado todos los mecánicos
+    return nivel == solucion.size();                                    // Compruebo si he asginado todos los mecánicos
 }
 
 int Valor(vector<int> &solucion){
-    int averias_asignadas = 0;                                  // Guarda el número de averías que tienen un mecánico
-    for (int i = 0; i < solucion.size(); i++)                   // Recorre todas los mecánicos buscando los que tengan averías
+    int averias_asignadas = 0;                                          // Guarda el número de averías que tienen un mecánico
+    for (int i = 0; i < solucion.size(); i++)                           // Recorre todas los mecánicos buscando los que tengan averías
         if (solucion[i] == 1)
             averias_asignadas++;
     return averias_asignadas;                                           
 }
 
 bool Criterio(int nivel, vector<int> &solucion){
-    return nivel < solucion.size();                             // Compruebo si me queda algún mecánico por comprobar
+    return nivel < solucion.size();                                     // Compruebo si me queda algún mecánico por comprobar
 }
 
 bool MasHermanos(int nivel, vector<int> &solucion, vector<vector<bool>> &apto, vector<bool> &seleccionados){
     int num_averias = seleccionados.size();
-    if (solucion[nivel] == 0)                                               // Si es el final, seguro que no hay más hermanos
+    if (solucion[nivel] == 0)                                           // Si es el final, seguro que no hay más hermanos
         return false;
     unsigned i = solucion[nivel];
     do {
         i++;
-    } while(i < num_averias && (seleccionados[i] || !apto[nivel][i]));     // Busco el primero no seleccionado y que sea apto para ese mecánico
+    } while(i < num_averias && (seleccionados[i] || !apto[nivel][i]));  // Busco el primero no seleccionado y que sea apto para ese mecánico
     return i < num_averias;
 }
 
 void Retroceder(int &nivel, vector<int> &solucion, vector<bool> &seleccionados){
-    seleccionados[solucion[nivel]] = false;                     // Quito la avería como elegida
-    solucion[nivel] = NO_ELEGIDO;                               // Lo pongo como no elegido
-    nivel--;                                                    // Subo de nivel
+    seleccionados[solucion[nivel]] = false;                             // Quito la avería como elegida
+    solucion[nivel] = NO_ELEGIDO;                                       // Lo pongo como no elegido
+    nivel--;                                                            // Subo de nivel
 }
 
 void Backtracking(vector<int> &solucion, vector<vector<bool>> &apto, vector<bool> &seleccionados, int averias, int mecanicos){
