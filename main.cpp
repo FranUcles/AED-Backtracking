@@ -2,24 +2,24 @@
 #include <iostream>
 using namespace std;
 
-const int NO_ELEGIDO = -1;        
+const int NO_ELEGIDA = -1;        
 
 void Generar(int &nivel, vector<int> &solucion, vector<vector<bool>> &apto, vector<bool> &seleccionados){
-    int num_averias = seleccionados.size();
+    int num_mecanicos = seleccionados.size();
     int i = solucion[nivel];
     do{
         i++;
-    } while (i < num_averias && seleccionados[i] && apto[nivel][i]);    // Busco el primero no seleccionado delante del actual y que el mecánico pueda reparar
-    if (i == num_averias)                                               // Si no quedan, siempre se quedará el 0
+    } while (i < num_mecanicos && (seleccionados[i] || !apto[i][nivel]));       // Busco el primero no seleccionado delante del actual y que el mecánico pueda reparar
+    if (i == num_mecanicos)                                                     // Si no quedan, siempre se quedará el 0
         solucion[nivel] = 0;
-    else{                                                               // Si queda alguna avería, se asigna la encontrada
-        solucion[nivel] = i;                                            // Asigno el seleccionado
-        seleccionados[i] = true;                                        // Lo marco como avería ya asignada
+    else{                                                                       // Si queda alguna avería, se asigna la encontrada
+        solucion[nivel] = i + 1;                                                // Asigno el seleccionado
+        seleccionados[i] = true;                                                // Lo marco como avería ya asignada
     }            
 }
 
 bool Solucion(int nivel, vector<int> &solucion){
-    return nivel == solucion.size();                                    // Compruebo si he asginado todos los mecánicos
+    return nivel == solucion.size();                                        // Compruebo si he asginado todos los mecánicos
 }
 
 int Valor(vector<int> &solucion){
@@ -47,16 +47,17 @@ bool MasHermanos(int nivel, vector<int> &solucion, vector<vector<bool>> &apto, v
 
 void Retroceder(int &nivel, vector<int> &solucion, vector<bool> &seleccionados){
     seleccionados[solucion[nivel]] = false;                             // Quito la avería como elegida
-    solucion[nivel] = NO_ELEGIDO;                                       // Lo pongo como no elegido
+    solucion[nivel] = NO_ELEGIDA;                                       // Lo pongo como no elegido
     nivel--;                                                            // Subo de nivel
 }
 
 void Backtracking(vector<int> &solucion, vector<vector<bool>> &apto, vector<bool> &seleccionados, int averias, int mecanicos){
     int nivel = 0;
-    for (int i = 0; i < mecanicos; i++)
-        solucion[i] = NO_ELEGIDO;
+    for (int i = 0; i < averias; i++)
+        solucion[i] = NO_ELEGIDA
+;
     int max_av_actuales = 0;
-    vector<int> SOA(mecanicos);                        
+    vector<int> SOA(averias);                        
     while (nivel >= 0){
         Generar(nivel, solucion, apto, seleccionados);
         if (Solucion(nivel, solucion) && Valor(solucion) > max_av_actuales){
@@ -71,6 +72,7 @@ void Backtracking(vector<int> &solucion, vector<vector<bool>> &apto, vector<bool
             }
         }
     }
+    solucion = SOA;
 }
 
 int main(){
@@ -79,10 +81,10 @@ int main(){
     for (int c = 1; c <= casos; c++){
         int mecanicos;                                                      // Número de mecánicos que hay
         int averias;                                                        // Número de averías que hay 
-        cin >> mecanicos >> averias;            
-        vector<vector<bool>> apto(mecanicos);                               // Array que determina si un mecánico puede o no reparar una avería
-        vector<int> solucion(mecanicos);                                    // Array de la solución
-        vector<bool> seleccionados(averias, false);                         // Array donde puedo ver si una avería ya ha sido asignada o no
+        cin >> mecanicos >> averias;
+        vector<bool> seleccionados(mecanicos);            
+        vector<vector<bool>> apto(mecanicos, vector<bool>(averias));        // Array que determina si un mecánico puede o no reparar una avería
+        vector<int> solucion(averias);                                      // Array de la solución
         for(int i = 0; i < mecanicos; i++){                                 // Rellena la matriz
 		    for(int j = 0; j < averias; j++){
                 int apto_int;                                               // Variable auxiliar para guardar el valor booleano en forma de entero
@@ -91,7 +93,12 @@ int main(){
                     apto[i][j] = true;
                 else
                     apto[i][j] = false;
-		}
+		    }
+        }
         Backtracking(solucion, apto, seleccionados, averias, mecanicos);    // Ejecuto el algoritmo de Backtracking
+        int arregladas = 0;
+        for (int i = 0; i < averias; i++)
+            if (solucion[i] > 0)
+                arregladas++;
 	}
 }
