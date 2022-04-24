@@ -21,19 +21,19 @@ void Generar(int &nivel, vector<int> &solucion, vector<vector<bool>> &apto, vect
 }
 
 bool Solucion(int nivel, vector<int> &solucion){
-    return nivel == solucion.size() - 1;                                                    // Compruebo si he asginado todos los mecánicos
+    return nivel == (int)solucion.size() - 1;                                               // Compruebo si he asginado todos los mecánicos
 }
 
 int Valor(vector<int> &solucion){
     int averias_asignadas = 0;                                                              // Guarda el número de averías que tienen un mecánico
-    for (int i = 0; i < solucion.size(); i++)                                               // Recorre todas las averías buscando las que tengan mecánico
+    for (unsigned i = 0; i < solucion.size(); i++)                                          // Recorre todas las averías buscando las que tengan mecánico
         if (solucion[i] > 0)
             averias_asignadas++;
     return averias_asignadas;                                           
 }
 
 bool Criterio(int nivel, vector<int> &solucion, int max_valor_actual, int mecanicos){
-    if (nivel == solucion.size() - 1)                                                       // Compruebo si me queda algún mecánico por comprobar
+    if (nivel == (int)solucion.size() - 1)                                                  // Compruebo si me queda algún mecánico por comprobar
         return false;
     if (max_valor_actual == mecanicos)                                                      // Si la solución ya es la óptima, no importan las otras soluciones
         return false;
@@ -46,7 +46,7 @@ bool MasHermanos(int nivel, vector<int> &solucion, vector<vector<bool>> &apto, v
     int num_mecanicos= seleccionados.size();
     if (solucion[nivel] == 0)                                                               // Si es el final, seguro que no hay más hermanos
         return false;
-    unsigned i = solucion[nivel] - 1;                   
+    int i = solucion[nivel] - 1;                   
     do {
         i++;
     } while(i < num_mecanicos && (seleccionados[i] || !apto[i][nivel]));                    // Busco el primero no seleccionado y que sea apto para ese mecánico
