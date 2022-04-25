@@ -8,8 +8,8 @@ void Generar(int &nivel, vector<int> &solucion, vector<vector<bool>> &apto, vect
     if (solucion[nivel] > 0)                                                                // Si la avería ya tenía un mecánico
         seleccionados[solucion[nivel] - 1] = false;                                         // quitarlo de los seleccionados, pues se puede coger otra vez
     int num_mecanicos = seleccionados.size();
-    int i = solucion[nivel];
-    do{
+    int i = (solucion[nivel] == -1 ? -1 : solucion[nivel] - 1);
+    do {
         i++;
     } while (i < num_mecanicos && (seleccionados[i] || !apto[i][nivel]));                   // Busco el primero no seleccionado delante del actual y que el mecánico pueda reparar
     if (i == num_mecanicos)                                                                 // Si no quedan, siempre se quedará el 0
